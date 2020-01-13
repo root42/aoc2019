@@ -61,6 +61,32 @@
         (recur (evaluate-opcode program instruction) (+ instruction 4))))
   )
 
+(defn run-gravity-assist
+  [input]
+  (->
+   (into [] input)
+   (assoc 1 12)
+   (assoc 2 2)
+   (run-int-program 0)
+   )
+  )
+
+(defn find-noun-verb
+  [input]
+  (first
+   (for [noun (range 100)
+         verb (range 100)
+         :let [result  (->
+                        (into [] input)
+                        (assoc 1 noun)
+                        (assoc 2 verb)
+                        (run-int-program 0)
+                        )]
+         :when (= 19690720 result)
+         ]
+     (+ verb (* 100 noun))
+     )))
+
 (defn -main
   "Advent of Code 2019."
   [& args]
@@ -70,29 +96,10 @@
     )
   (let [input (read-input-csv "2.txt")]
     (println "2.1 1202 Program Alarm - gravity assist: "
-             (->
-              (into [] input)
-              (assoc 1 12)
-              (assoc 2 2)
-              (run-int-program 0)
-              )
-             )
+             (run-gravity-assist input))
     )
   (let [input (read-input-csv "2.txt")]
     (println "2.2 1202 Program Alarm - noun verb: "
-             (first
-              (for [noun (range 100)
-                    verb (range 100)
-                    :let [result  (->
-                                   (into [] input)
-                                   (assoc 1 noun)
-                                   (assoc 2 verb)
-                                   (run-int-program 0)
-                                   )]
-                    :when (= 19690720 result)
-                    ]
-                (+ verb (* 100 noun))
-                ))
-             )
+             (find-noun-verb input))
     )
   )
