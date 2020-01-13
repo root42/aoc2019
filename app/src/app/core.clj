@@ -78,4 +78,21 @@
               )
              )
     )
+  (let [input (read-input-csv "2.txt")]
+    (println "2.2 1202 Program Alarm - noun verb: "
+             (first
+              (for [noun (range 100)
+                    verb (range 100)
+                    :let [result  (->
+                                   (into [] input)
+                                   (assoc 1 noun)
+                                   (assoc 2 verb)
+                                   (run-int-program 0)
+                                   )]
+                    :when (= 19690720 result)
+                    ]
+                (+ verb (* 100 noun))
+                ))
+             )
+    )
   )
