@@ -180,8 +180,6 @@
   (let [input (read-input-csv "2.txt")]
     (println "2.1 1202 Program Alarm - gravity assist: "
              (run-gravity-assist input))
-    )
-  (let [input (read-input-csv "2.txt")]
     (println "2.2 1202 Program Alarm - noun verb: "
              (find-noun-verb input))
     )
