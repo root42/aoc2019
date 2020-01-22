@@ -40,8 +40,10 @@
   (let [direction (first definition)
         length (Integer. (clojure.string/join (rest definition)))
         ]
-    ; return the end position of the wire and the generated points,
-    ; WITHOUT the first point. or else you get an intersection at [0 0], for example.
+    ; return the end position of the wire and the generated points, WITHOUT the
+    ; first point (hence the inc). or else you get an intersection at [0 0],
+    ; for example. Also range goes to n-1, so the inc is necessary there as
+    ; well.
     [
      (point-in-direction start direction length)
      (map #(point-in-direction start direction (inc %)) (range length))
@@ -71,14 +73,16 @@
 
 (defn intersect-wires
   [wires]
-  (apply clojure.set/intersection wires)
+  (->> wires
+       (map set)
+       (apply clojure.set/intersection)
+       )
   )
 
 (defn compute-manhattan-to-intersection
   [input]
   (->> input
        (map make-wire)
-       (map set)
        (intersect-wires)
        (map #(manhattan % [0 0]))
        (reduce min)
