@@ -1,4 +1,5 @@
 (ns app.core)
+(require '(clojure set))
 
 (defn read-input
   [input-file]
@@ -10,6 +11,74 @@
   [input-file]
   (let [input (slurp input-file)]
     (map #(Integer. %) (re-seq #"[^,\n]+" input))) 
+  )
+
+(defn read-wire-definitions
+  [input-file]
+  (let [input (slurp input-file)]
+    (map #(clojure.string/split % #",") (clojure.string/split-lines input)
+         )
+    )
+  )
+
+(defn point-in-direction
+  [[x y] direction distance]
+  (case direction
+    \R [(+ x distance) y]
+    \L [(- x distance) y]
+    \U [x (+ y distance)]
+    \D [x (- y distance)]
+    )
+  )
+
+(defn generate-points
+  [start definition]
+  (let [direction (first definition)
+        length (Integer. (clojure.string/join (rest definition)))
+        ]
+    ; return the end position of the wire and the generated points,
+    ; WITHOUT the first point. or else you get an intersection at [0 0], for example.
+    [
+     (point-in-direction start direction length)
+     (map #(point-in-direction start direction (inc %)) (range length))
+     ]
+    )
+  )
+
+(defn make-wire
+  [wire-definition]
+  (loop [pos [0 0]
+         points []
+         definitions wire-definition
+         ]
+    (if (empty? definitions)
+      points
+      (let [definition (first definitions)
+            [new-pos new-points] (generate-points pos definition)]
+        (recur new-pos (concat points new-points) (rest definitions))
+        )
+      )
+    )
+  )
+
+(defn manhattan
+  [[x1 y1] [x2 y2]]
+  (+ (Math/abs (- x2 x1)) (Math/abs (- y2 y1))))
+
+(defn intersect-wires
+  [wires]
+  (apply clojure.set/intersection wires)
+  )
+
+(defn compute-manhattan-to-intersection
+  [input]
+  (->> input
+       (map make-wire)
+       (map set)
+       (intersect-wires)
+       (map #(manhattan % [0 0]))
+       (reduce min)
+       )
   )
 
 (defn fuel-req
@@ -101,5 +170,10 @@
   (let [input (read-input-csv "2.txt")]
     (println "2.2 1202 Program Alarm - noun verb: "
              (find-noun-verb input))
+    )
+  (let [input (read-wire-definitions "3.txt")]
+    (println "3.1 Manhattan distance: "
+             (compute-manhattan-to-intersection input)
+             )
     )
   )
