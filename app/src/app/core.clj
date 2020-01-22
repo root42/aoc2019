@@ -1,6 +1,8 @@
 (ns app.core)
 (require '(clojure set))
 
+;; Reader functions for the different inputs
+
 (defn read-input
   [input-file]
   (let [input (slurp input-file)]
@@ -20,6 +22,8 @@
          )
     )
   )
+
+;; Day 3
 
 (defn point-in-direction
   [[x y] direction distance]
@@ -81,27 +85,7 @@
        )
   )
 
-(defn fuel-req
-  [mass]
-  (int (- (Math/floor (/ mass 3) ) 2) )
-  )
-
-(defn fuel-reqs
-  [modules]
-  (map #(fuel-req %) modules )
-  )
-
-(defn rec-fuel-req
-  [mass]
-  (if (<= mass 0)
-    0
-    (+ mass (rec-fuel-req (fuel-req mass))))
-  )
-
-(defn rec-fuel-reqs
-  [modules]
-  (reduce + (map #(rec-fuel-req (fuel-req %)) modules))
-  )
+;; Day 2
 
 (defn evaluate-opcode
   "Evaluates the opcode and mutates the vector"
@@ -155,6 +139,32 @@
          ]
      (+ verb (* 100 noun))
      )))
+
+;; Day 1
+
+(defn fuel-req
+  [mass]
+  (int (- (Math/floor (/ mass 3) ) 2) )
+  )
+
+(defn fuel-reqs
+  [modules]
+  (map #(fuel-req %) modules )
+  )
+
+(defn rec-fuel-req
+  [mass]
+  (if (<= mass 0)
+    0
+    (+ mass (rec-fuel-req (fuel-req mass))))
+  )
+
+(defn rec-fuel-reqs
+  [modules]
+  (reduce + (map #(rec-fuel-req (fuel-req %)) modules))
+  )
+
+;; Main program
 
 (defn -main
   "Advent of Code 2019."
