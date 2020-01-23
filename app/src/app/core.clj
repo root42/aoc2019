@@ -89,6 +89,24 @@
        )
   )
 
+(defn compute-minimal-combined-steps
+  [input]
+  (let [wires (map make-wire input)
+        wire1 (first wires)
+        wire2 (first (rest wires))
+        ]
+    ; We can find the minimal path by looking up each intersection in the
+    ; generated wire. The method .indexOf will give us the first index in the
+    ; vector, which is the minimal distance. We have to add one extra step for
+    ; each wire, because the origin is missing from this computation.
+    (->> wires
+         (intersect-wires)
+         (map #(+ 2 (.indexOf wire1 %) (.indexOf wire2 %)))
+         (reduce min)
+         )
+    )
+  )
+
 ;; Day 2
 
 (defn evaluate-opcode
@@ -186,6 +204,9 @@
   (let [input (read-wire-definitions "3.txt")]
     (println "3.1 Manhattan distance: "
              (compute-manhattan-to-intersection input)
+             )
+    (println "3.2 Minimize signal delay: "
+             (compute-minimal-combined-steps input)
              )
     )
   )
