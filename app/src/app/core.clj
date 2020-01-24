@@ -40,8 +40,28 @@
   (->> (range 240920 (inc 789857))
        (map str)
        (map seq)
-       (filter has-two-same-digits)
        (filter is-monotonic)
+       (filter has-two-same-digits)
+       (count)
+       )
+  )
+
+(defn has-an-exact-double
+  [number]
+  (->> number
+       (frequencies)
+       (vals)
+       (some #{2})
+       )
+  )
+
+(defn compute-all-passwords-with-double
+  []
+  (->> (range 240920 (inc 789857))
+       (map str)
+       (map seq)
+       (filter is-monotonic)
+       (filter has-an-exact-double)
        (count)
        )
   )
@@ -234,5 +254,8 @@
     )
   (println "4.1 Compute number of valid passwords"
            (compute-all-passwords)
+           )
+  (println "4.2 Compute number of valid passwords with at least one double"
+           (compute-all-passwords-with-double)
            )
   )
