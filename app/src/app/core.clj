@@ -23,6 +23,29 @@
     )
   )
 
+;; Day 4
+
+(defn has-two-same-digits
+  [number]
+  (< (count (set number)) (count number))
+  )
+
+(defn is-monotonic
+  [number]
+  (= number (sort number))
+  )
+
+(defn compute-all-passwords
+  []
+  (->> (range 240920 (inc 789857))
+       (map str)
+       (map seq)
+       (filter has-two-same-digits)
+       (filter is-monotonic)
+       (count)
+       )
+  )
+
 ;; Day 3
 
 (defn point-in-direction
@@ -209,4 +232,7 @@
              (compute-minimal-combined-steps input)
              )
     )
+  (println "4.1 Compute number of valid passwords"
+           (compute-all-passwords)
+           )
   )
